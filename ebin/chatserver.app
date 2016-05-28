@@ -1,0 +1,9 @@
+{application,chatserver,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{chatserver_app,[]}},
+              {env,[]},
+              {modules,[chatserver_app,chatserver_sup,tcp_async_dispatcher,
+                        tcp_async_listener,tcp_async_receiver,user_manager]}]}.
