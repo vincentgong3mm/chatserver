@@ -12,3 +12,5 @@ tcp_async_listener:start_link(testname, {user_manager, Pid}, 8080).
 %% 다른 terminal에서
 telnet 127.0.0.1 8080
 후 텍스트 전달하면 로그 보임
+
+
