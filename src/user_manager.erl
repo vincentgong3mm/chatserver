@@ -39,6 +39,13 @@ handle_call({}, _From, State) ->
 handle_cast({tcp, Socket, BinRecv}, State) ->
     ?LOG({handle_cast, tcp, Socket, BinRecv, State}),
     ?LOG({<<"do game logic.............">>}),
+    
+    StrRecv = binary:bin_to_list(BinRecv),
+    
+    %% 변수하나에 넣고 앞에것 두개만 가져오기로 변경해야함
+    [Cmd, Msg] = string:tokens(StrRecv, ":"),
+    do_command(Cmd, Msg),
+    
     {noreply, State};
 
 handle_cast({tcp_closed, Socket}, State) ->
@@ -58,10 +65,25 @@ recv_from_client(Pid, {tcp, Socket, BinRecv}) ->
     ok.
 
 binary_from_client(Pid, {Socket, BinRecv}) ->
-    ?LOG({<<"binary_from_client">>, Pid, Socket, BinRecv}),
     gen_server:cast(Pid, {tcp, Socket, BinRecv}),
     ok.
     
 disconnected_from_client(Pid, {Socket}) ->
     gen_server:cast(Pid, {tcp_closed, Socket}),
     ok.
+    
+
+do_command("/create", Message) ->   
+    ?LOG(Message),
+    ok;    
+do_command("/join", Message) ->   
+    ?LOG(Message),
+    ok;
+do_command("/leave", Message) ->   
+    ?LOG(Message),
+    ok;
+do_command("/chat", Message) ->   
+    ?LOG(Message),
+    ok.
+    
+    
