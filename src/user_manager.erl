@@ -43,8 +43,8 @@ handle_cast({tcp, Socket, BinRecv}, State) ->
     StrRecv = binary:bin_to_list(BinRecv),
     
     %% 변수하나에 넣고 앞에것 두개만 가져오기로 변경해야함
-    [Cmd, Msg] = string:tokens(StrRecv, ":"),
-    do_command(Cmd, Msg),
+    [Cmd, RoomName, Msg] = string:tokens(StrRecv, ":"),
+    do_command(Cmd, RoomName, Msg),
     
     {noreply, State};
 
@@ -73,17 +73,21 @@ disconnected_from_client(Pid, {Socket}) ->
     ok.
     
 
-do_command("/create", Message) ->   
+do_command("/create", RoomName, Message) ->   
     ?LOG(Message),
+    % room_sup을 통해서 rooms를 하나 생성 
     ok;    
-do_command("/join", Message) ->   
+do_command("/join", RoomName, Message) ->   
     ?LOG(Message),
+    % room_sup을 통해서 해당 rooms에 입장
     ok;
-do_command("/leave", Message) ->   
+do_command("/leave", RoomName, Message) ->   
     ?LOG(Message),
+    % room_sup을 통해서 해당 rooms에 퇴장
     ok;
-do_command("/chat", Message) ->   
+do_command("/chat", RoomName, Message) ->   
     ?LOG(Message),
+    % room_sup을 통해서 해당 rooms채팅 메시지 보내기
     ok.
     
     
