@@ -43,7 +43,8 @@
 }).
 
 
-start_link([RoomName]) ->
+start_link(RoomName) ->
+    ?LOG({start_link, RoomName}),
     State = #state{room_name = RoomName},
     gen_server:start_link(?MODULE,  % Module 
                         [State], % Arg
