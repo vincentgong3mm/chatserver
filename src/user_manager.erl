@@ -16,7 +16,9 @@
 -export([
    recv_from_client/2,
    binary_from_client/2,
-   disconnected_from_client/2
+   disconnected_from_client/2,
+   binary_from_client/1,    % gen_server:call을 ?MODULE로 전달
+   disconnected_from_client/1  % gen_server:call을 ?MODULE로 전달
 ]).
 
 
@@ -72,8 +74,20 @@ binary_from_client(Pid, {Socket, BinRecv}) ->
 disconnected_from_client(Pid, {Socket}) ->
     gen_server:cast(Pid, {tcp_closed, Socket}),
     ok.
-    
 
+binary_from_client({Socket, BinRecv}) ->
+    gen_server:cast(?MODULE, {tcp, Socket, BinRecv}),
+    ok.
+    
+disconnected_from_client({Socket}) ->
+    gen_server:cast(?MODULE, {tcp_closed, Socket}),
+    ok.
+
+    
+do_command("/login", RoomName, Message) ->   
+    ?LOG(Message),
+    % user_manager에 유저 등록 및 관리 시작 
+    ok;
 do_command("/create", RoomName, Message) ->   
     ?LOG(Message),
     % room_sup을 통해서 rooms를 하나 생성 

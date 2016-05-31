@@ -82,7 +82,12 @@ handle_info({tcp, Socket, Bin}, State) ->
     ?LOG(State#state.handler),
     
     {Module, Pid} = State#state.handler,
-    Module:binary_from_client(Pid, {Socket, Bin}),
+    
+    %아래는 pid로 데이터 전달하기 
+    %Module:binary_from_client(Pid, {Socket, Bin}),
+    
+    %아래는 Module로 전달하기, 클라이언트로 받은 메시지를 처리하는 프로세스가 하나인 경우 모듈로 보내는 것이 더 이해하기 편함.
+    Module:binary_from_client({Socket, Bin}),
     
     {noreply, State};
 
@@ -96,7 +101,12 @@ handle_info({tcp_closed, Socket}, State) ->
     ?LOG(State2),
     
     {Module, Pid} = State#state.handler,
-    Module:disconnected_from_client(Pid, {Socket}),
+    
+    %아래는 pid로 데이터 전달하기 
+    %Module:disconnected_from_client(Pid, {Socket}),
+    
+    %아래는 Module로 전달하기, 클라이언트로 받은 메시지를 처리하는 프로세스가 하나인 경우 모듈로 보내는 것이 더 이해하기 편함.
+    Module:disconnected_from_client({Socket}),
     
     {noreply, State2}.
 
