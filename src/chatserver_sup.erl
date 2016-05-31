@@ -29,6 +29,9 @@ init([]) ->
     init({one_for_one, 5, 10});
 
 init({RestartStrategy, MaxRestart, MaxTime}) ->
+    
+    tcp_async_listener:start_link(mysocketserver, {user_manager, 0}, 8080),
+    
     {ok, {{RestartStrategy, MaxRestart, MaxTime},
         [{user_manager, 
             {user_manager, start_link, []},

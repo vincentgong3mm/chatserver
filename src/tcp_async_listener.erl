@@ -41,6 +41,9 @@ init(Parent, State) ->
     
     proc_lib:init_ack(Parent, {ok, self()}),
     
+    % 프로세스 등록
+    register(?MODULE, self()),
+    
     %% 여러 client socket을 하나의 process에서 messgae를 받을 수 있나 테스트 하기 
     {ok, Pid} = tcp_async_receiver:start_link(State#state.handler),
     State2 = State#state{parent=Parent, listen_sock=ListenSock, receiver_pid = Pid},

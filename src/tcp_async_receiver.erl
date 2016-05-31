@@ -31,7 +31,8 @@
 
 start_link(Handler) ->
     State = #state{handler = Handler, sockets = maps:new()},
-    gen_server:start_link(?MODULE,  % Module 
+    gen_server:start_link({local, ?MODULE}, % register process
+                        ?MODULE,  % Module 
                         [State], % Arg
                         []).    % Opt
                             
