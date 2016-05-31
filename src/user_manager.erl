@@ -25,7 +25,8 @@
     }).
 
 start_link() ->
-    gen_server:start_link(?MODULE, [], []).
+    gen_server:start_link({local, user_manager},
+                        ?MODULE, [], []).
 init([]) ->
     State = #state{etc = test_value},
     {ok, State}.

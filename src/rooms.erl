@@ -46,7 +46,8 @@
 start_link(RoomName) ->
     ?LOG({start_link, RoomName}),
     State = #state{room_name = RoomName},
-    gen_server:start_link(?MODULE,  % Module 
+    gen_server:start_link({local, RoomName},    % Process Name
+                        ?MODULE,  % Module 
                         [State], % Arg
                         []).    % Opt
     
