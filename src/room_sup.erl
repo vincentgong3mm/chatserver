@@ -41,5 +41,9 @@ init([]) ->
             {rooms, start_link, []},
             temporary, 1000, worker, [rooms]}
         ]}}.
+
+start_child(RoomName) ->
+    supervisor:start_child(?MODULE, [RoomName]).
+    
         
         

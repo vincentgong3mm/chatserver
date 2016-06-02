@@ -21,16 +21,21 @@
    disconnected_from_client/1  % gen_server:call을 ?MODULE로 전달
 ]).
 
+-record(user_info, {
+   user_name :: string(),
+   socket :: inet:socket(),
+   room_name :: atom() 
+}).
 
 -record(state, {
-    etc :: any()
+    users = #{} :: map()
     }).
 
 start_link() ->
     gen_server:start_link({local, user_manager},
                         ?MODULE, [], []).
 init([]) ->
-    State = #state{etc = test_value},
+    State = #state{},
     {ok, State}.
     
 terminate(_Reason, _State) ->
