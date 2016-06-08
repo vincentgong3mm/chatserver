@@ -19,7 +19,8 @@
 -export([start_link/0]).
 
 %% Supervisor callbacks
--export([init/1]).
+-export([init/1,
+        start_child/1]).
 
 %% Helper macro for declaring children of supervisor
 -define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).

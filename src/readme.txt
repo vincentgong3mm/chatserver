@@ -14,3 +14,10 @@ telnet 127.0.0.1 8080
 후 텍스트 전달하면 로그 보임
 
 
+%% 채팅방이름으로 프로세스명 찾아서 pid구하기
+%% 이렇게 구한 후 해당 프로세스에 join / chat등 메시지 보내기 하면될것 같음. 
+
+6> RName1 = binary_to_atom(<<"roomName1">>, utf8).
+roomName1
+7> whereis(RName1).
+<0.44.0>
