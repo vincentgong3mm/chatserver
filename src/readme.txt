@@ -21,3 +21,7 @@ telnet 127.0.0.1 8080
 roomName1
 7> whereis(RName1).
 <0.44.0>
+
+
+
+테스트
