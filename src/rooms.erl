@@ -95,6 +95,7 @@ code_change(OldVsn, State, Extra) ->
 %% 각방의 pid를 알아야 하나? 아니면 room name을 확인 체크 하는 방식으로 해야하나?
 %% room_sup에서 room_name - pid를 관리하는게 있어야 할듯     
 do_command(Pid, call, {Command, UserName, ClientSocket}) ->
+    ?LOG({Pid, Command, UserName, ClientSocket}),
     gen_server:call(Pid, {Command, UserName, ClientSocket});
 do_command(Pid, call, {Command, UserName}) ->
     gen_server:call(Pid, {Command, UserName}).
