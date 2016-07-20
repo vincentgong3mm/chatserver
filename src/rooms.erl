@@ -79,7 +79,7 @@ handle_call({leave, UserName}, _From, State) ->
     
     ?LOG({leaveState, State2}),
     {reply, _From, State2};
-handle_call({chat, UserName, ClientSocket}, _From, State) ->
+handle_call({chat, Message}, _From, State) ->
     ?LOG({chat, State}),
     % #state.users에 있는 모든 유저에게 채팅 전달해야함
 
@@ -91,7 +91,7 @@ handle_call({chat, UserName, ClientSocket}, _From, State) ->
 
     ?LOG(UsersSocket),
 
-    [gen_tcp:send(USocket, <<"111-----1111">>) || USocket <- UsersSocket],
+    [gen_tcp:send(USocket, Message) || USocket <- UsersSocket],
 
     
     {reply, _From, State}.
@@ -108,8 +108,8 @@ code_change(OldVsn, State, Extra) ->
 do_command(Pid, call, {Command, UserName, ClientSocket}) ->
     ?LOG({Pid, Command, UserName, ClientSocket}),
     gen_server:call(Pid, {Command, UserName, ClientSocket});
-do_command(Pid, call, {Command, UserName}) ->
-    gen_server:call(Pid, {Command, UserName}).
+do_command(Pid, call, {chat, Message}) ->
+    gen_server:call(Pid, {chat, Message}).
        
 
 send_to_cleint(ClientSocket, Packet) ->

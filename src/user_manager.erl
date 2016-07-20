@@ -158,7 +158,7 @@ do_command("/chat", RoomName, Message, Socket, State) ->
     Name1 = list_to_atom(RoomName),
     RoomPid = whereis(Name1),
     
-    rooms:do_command(RoomPid, call, {chat, UserInfo#user_info.user_name, Socket}),
+    rooms:do_command(RoomPid, call, {chat, Message}),
     
     State.
     
