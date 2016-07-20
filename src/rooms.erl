@@ -79,9 +79,20 @@ handle_call({leave, UserName}, _From, State) ->
     
     ?LOG({leaveState, State2}),
     {reply, _From, State2};
-handle_call({chat, UserName}, _From, State) ->
-    ?LOG({leaveState, State}),
+handle_call({chat, UserName, ClientSocket}, _From, State) ->
+    ?LOG({chat, State}),
     % #state.users에 있는 모든 유저에게 채팅 전달해야함
+
+    UsersList = maps:to_list(State#state.users),
+
+    ?LOG(UsersList),
+
+    UsersSocket = [Socket || {NameKey, {MapName, NameValue, Socket}} <- UsersList],
+
+    ?LOG(UsersSocket),
+
+    [gen_tcp:send(USocket, <<"111-----1111">>) || USocket <- UsersSocket],
+
     
     {reply, _From, State}.
     
@@ -101,3 +112,5 @@ do_command(Pid, call, {Command, UserName}) ->
     gen_server:call(Pid, {Command, UserName}).
        
 
+send_to_cleint(ClientSocket, Packet) ->
+    gen_tcp:send(ClientSocket, Packet).

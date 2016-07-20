@@ -147,10 +147,19 @@ do_command("/join", RoomName, _Message, Socket, State) ->
 do_command("/leave", RoomName, Message, Socket, State) ->   
     ?LOG(Message),
     % room_sup을 통해서 해당 rooms에 퇴장
-    ok;
-do_command("/chat", RoomName, Message, Socket, _State) ->   
+
+    State;
+do_command("/chat", RoomName, Message, Socket, State) ->   
     ?LOG(Message),
     % room_sup을 통해서 해당 rooms채팅 메시지 보내기
-    ok.
+
+    UserInfo = maps:get(Socket, State#state.users),
+
+    Name1 = list_to_atom(RoomName),
+    RoomPid = whereis(Name1),
+    
+    rooms:do_command(RoomPid, call, {chat, UserInfo#user_info.user_name, Socket}),
+    
+    State.
     
     

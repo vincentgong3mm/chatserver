@@ -26,3 +26,18 @@ roomName1
 
 6> list_to_atom("aaaa").
 aaaa
+
+
+
+----------------
+테스트방법
+telnet 127.0.0.1 8080
+/login:xxx:name100
+/create:room100:0000
+/join:room100:xxxx
+/chat:room100:testmessage
+
+다른 세션에서
+telnet 127.0.0.1 8080
+/login:000:name200
+/join:room100:xxxx
