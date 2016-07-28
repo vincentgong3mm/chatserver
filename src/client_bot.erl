@@ -91,6 +91,16 @@ code_change(OldVsn, State, Extra) ->
 
 connect_and_send() ->
     gen_server:cast(client_bot, {connect}),
+    sleep(1000),
     gen_server:cast(client_bot, {login}),
+    sleep(1000),
     gen_server:cast(client_bot, {create}),
-    gen_server:cast(client_bot, {chat}).
+    sleep(1000),
+    gen_server:cast(client_bot, {chat}),
+    sleep(1000).
+
+sleep(T) ->
+    receive
+    after T ->
+       true     
+    end.

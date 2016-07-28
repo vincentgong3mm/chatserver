@@ -96,7 +96,7 @@ handle_info({tcp, Socket, Bin}, State) ->
 handle_info({tcp_closed, Socket}, State) ->
     ?LOG({tcp_closed, ",", Socket}),
  
-    State2 = #state{
+    State2 = State#state{
                     sockets = maps:remove(Socket, State#state.sockets)
                     },                
     ?LOG(State2),

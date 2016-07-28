@@ -41,3 +41,17 @@ telnet 127.0.0.1 8080
 telnet 127.0.0.1 8080
 /login:000:name200
 /join:room100:xxxx
+
+--------------
+client bot 테스트방법
+
+1. erl 실행해서 채팅 서버 실행
+    application:start(chastserver).
+
+2. 다른 erl에서 client_bot실행
+    client_bot:start_link(1).
+    같은세션 또는 다른 세션에서 
+    client_ctrl:start_link(1). 
+    gen_server:cast(client_ctrl, {cl}).
+    이렇게 하면 client_ctrl -> client_bot에 메시지 보내서 서버 접속하고 패킷보낸다.
+    
