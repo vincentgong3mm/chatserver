@@ -5,6 +5,7 @@
               {applications,[kernel,stdlib]},
               {mod,{chatserver_app,[]}},
               {env,[]},
-              {modules,[chatserver_app,chatserver_sup,client_bot,client_ctrl,
-                        room_sup,rooms,tcp_async_dispatcher,
-                        tcp_async_listener,tcp_async_receiver,user_manager]}]}.
+              {modules,[chatserver_app,chatserver_sup,client_bot,
+                        client_bot_sup,client_ctrl,room_sup,rooms,
+                        tcp_async_dispatcher,tcp_async_listener,
+                        tcp_async_receiver,user_manager]}]}.

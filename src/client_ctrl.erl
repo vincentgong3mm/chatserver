@@ -9,29 +9,31 @@
     handle_call/3,
     handle_cast/2,
     handle_info/2,
-    code_change/3,
-    connect_and_send/0
+    code_change/3
 ]).
 
-start_link(Temp) ->
-    ?LOG(client_bot),
+start_link(UserNo) ->
+    ?LOG(?MODULE),
     gen_server:start_link({local, ?MODULE},    % Process Name
                         ?MODULE,  % Module 
-                        [], % Arg
+                        [UserNo], % Arg
                         []).    % Opt
     
-init([]) ->
-    State = 0,
+init([UserNo]) ->
+    {Ret, Pid} = client_bot:start_link(UserNo),
+    State = {UserNo, Pid},
     {ok, State}.
 terminate(_Reason, _State) ->
     ok.
-
 
 handle_call({_Value, Temp}, _From, State) ->
     {reply, _From, State}.
 
 handle_cast({cl}, State) ->
-    connect_and_send(),
+    connect_and_send(State),
+    {noreply, State};
+handle_cast({chat, Count}, State) ->
+    chat_repeat(State, Count),
     {noreply, State};
 
 handle_cast({_Value}, State) ->
@@ -41,21 +43,28 @@ handle_info({_Value}, State) ->
 code_change(OldVsn, State, Extra) ->
     {ok, State}.
 
-connect_and_send() ->
-    gen_server:cast(client_bot, {connect}),
+connect_and_send(State) ->
+    {UserNo, Pid} = State,
+    gen_server:cast(Pid, {connect}),
     sleep(200),
-    gen_server:cast(client_bot, {login}),
+    gen_server:cast(Pid, {login}),
     sleep(200),
-    gen_server:cast(client_bot, {create}),
+    gen_server:cast(Pid, {create}),
     sleep(200),
-    gen_server:cast(client_bot, {chat}),
+    gen_server:cast(Pid, {chat}),
     sleep(200).
 
-chat_repeat(N) ->
-    gen_server:cast(client_bot, {chat}),
-    sleep(200),
-    chat_repeat(N -1);
-chat_repeat(0) ->
+chat_repeat(State, N) when N > 0 ->
+    ?LOG([chat_repeat, N]),
+    {UserNo, Pid} = State,
+
+    Str = lists:concat(["botMessage", UserNo, "Repeat=", N]),
+
+    gen_server:cast(Pid, {chat, Str}),
+    sleep(100),
+    chat_repeat(State, N - 1);
+chat_repeat(State, 0) ->
+    ?LOG([chat_repeat, 0, aaaaaend]),
     0.
 
 sleep(T) ->

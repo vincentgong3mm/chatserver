@@ -9,8 +9,7 @@
     handle_call/3,
     handle_cast/2,
     handle_info/2,
-    code_change/3,
-    connect_and_send/0
+    code_change/3
 ]).
 
 -record(state, {
@@ -89,9 +88,9 @@ handle_call({chat}, _From, State) ->
 handle_call({_Value, Temp}, _From, State) ->
     {reply, _From, State}.
 
-handle_cast({cl}, State) ->
-    connect_and_send(),
-    {noreply, State};
+%handle_cast({cl}, State) ->
+%    connect_and_send(),
+%    {noreply, State};
       
 handle_cast({connect}, State) ->
     {ok, Socket} = gen_tcp:connect({127,0,0,1}, 8080, [binary, {active,true}]),
@@ -140,17 +139,24 @@ handle_cast({join}, State) ->
     gen_tcp:send(Socket, Packet),
 
     {noreply, State};
+
+handle_cast({chat, Message}, State) ->
+    send_chat(State, Message),
+    {noreply, State};
+
+
 handle_cast({chat}, State) ->
     %gen_tcp:send(State, <<"/chat:room100:testmessage\r\n">>),
 
-    RoomName = State#state.room_name,
-    UserName = State#state.user_name,
-    Socket = State#state.socket,
+    %RoomName = State#state.room_name,
+    %UserName = State#state.user_name,
+    %Socket = State#state.socket,
 
-    Str = lists:concat(["/chat:", RoomName, ":test----chat----", UserName]),
-    Packet = unicode:characters_to_binary(Str),
+    %Str = lists:concat(["/chat:", RoomName, ":test----chat----", UserName]),
+    %Packet = unicode:characters_to_binary(Str),
 
-    gen_tcp:send(Socket, Packet),
+    %gen_tcp:send(Socket, Packet),
+    send_chat(State, "test-message"),
 
     {noreply, State};
 
@@ -169,19 +175,28 @@ code_change(OldVsn, State, Extra) ->
 %    gen_server:call(client_bot, {create}),
 %    gen_server:call(client_bot, {chat}).
     
-
-connect_and_send() ->
-    gen_server:cast(client_bot, {connect}),
-    sleep(1000),
-    gen_server:cast(client_bot, {login}),
-    sleep(1000),
-    gen_server:cast(client_bot, {create}),
-    sleep(1000),
-    gen_server:cast(client_bot, {chat}),
-    sleep(1000).
+%connect_and_send() ->
+%    gen_server:cast(client_bot, {connect}),
+%    sleep(1000),
+%    gen_server:cast(client_bot, {login}),
+%    sleep(1000),
+%    gen_server:cast(client_bot, {create}),
+%    sleep(1000),
+%    gen_server:cast(client_bot, {chat}),
+%    sleep(1000).
 
 sleep(T) ->
     receive
     after T ->
        true     
     end.
+
+send_chat(State, Message) ->
+    RoomName = State#state.room_name,
+    UserName = State#state.user_name,
+    Socket = State#state.socket,
+
+    Str = lists:concat(["/chat:", RoomName, ":", UserName, "-M->", Message]),
+    Packet = unicode:characters_to_binary(Str),
+
+    gen_tcp:send(Socket, Packet).
