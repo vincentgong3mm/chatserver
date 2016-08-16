@@ -64,7 +64,7 @@ chat_repeat(State, N) when N > 0 ->
     sleep(100),
     chat_repeat(State, N - 1);
 chat_repeat(State, 0) ->
-    ?LOG([chat_repeat, 0, aaaaaend]),
+    ?LOG([chat_repeat, 0]),
     0.
 
 sleep(T) ->

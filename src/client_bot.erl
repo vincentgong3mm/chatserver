@@ -196,7 +196,7 @@ send_chat(State, Message) ->
     UserName = State#state.user_name,
     Socket = State#state.socket,
 
-    Str = lists:concat(["/chat:", RoomName, ":", UserName, "-M->", Message]),
+    Str = lists:concat(["/chat:", RoomName, ":", UserName, "-M->", Message, "\r\n"]),
     Packet = unicode:characters_to_binary(Str),
 
     gen_tcp:send(Socket, Packet).
