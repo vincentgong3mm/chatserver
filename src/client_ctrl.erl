@@ -22,6 +22,7 @@ start_link(UserNo) ->
 init([UserNo]) ->
     {Ret, Pid} = client_bot:start_link(UserNo),
     State = {UserNo, Pid},
+    ?LOG(State),
     {ok, State}.
 terminate(_Reason, _State) ->
     ok.
@@ -44,6 +45,7 @@ code_change(OldVsn, State, Extra) ->
     {ok, State}.
 
 connect_and_send(State) ->
+    ?LOG(State),
     {UserNo, Pid} = State,
     gen_server:cast(Pid, {connect}),
     sleep(200),
